@@ -2,11 +2,11 @@ package services;
 
 import utils.TextFileHandler;
 
-public class Auth {
+public class UserManager {
 
 	TextFileHandler userDatabase;
 
-	public Auth() {
+	public UserManager() {
 		this.userDatabase = new TextFileHandler("./data/users");
 	}
 

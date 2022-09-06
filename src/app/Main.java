@@ -2,11 +2,13 @@ package app;
 
 import java.util.Scanner;
 
-import services.Auth;
+import services.UserManager;
+import utils.TextFileHandler;
 
 public class Main {
 
 	public static void main(String[] args) {
+		TextFileHandler tfh = new TextFileHandler("./data/users");
 		Scanner sc = new Scanner(System.in);
 		
 		System.out.printf("Type your login: ");
@@ -14,13 +16,14 @@ public class Main {
 		System.out.printf("Type your password: ");
 		String password = sc.nextLine();
 		
-		Auth validator = new Auth();
+		UserManager validator = new UserManager();
 		boolean isValidated = validator.verifyUser(login, password);
 
 		if(isValidated) {
-			System.out.println("Welcome");
+			System.out.println(tfh.nextLine());
+			tfh.write("a",2);
 		} else {
-			
+			System.out.println("Go out");
 		}
 		
 		sc.close();
