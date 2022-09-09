@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TextFileHandler {
 
@@ -30,22 +32,15 @@ public class TextFileHandler {
 		}
 	}
 
-	private BufferedWriter fileWriterFactory(File file) {
-		BufferedWriter bw;
-		try {
-			bw = new BufferedWriter(new FileWriter(file));
-			return bw;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
 	private BufferedWriter fileWriterFactory(String path) {
+		return fileWriterFactory(path, false);
+	}
+
+	private BufferedWriter fileWriterFactory(String path, boolean isAppending) {
 		File file = new File(path);
 		BufferedWriter bw;
 		try {
-			bw = new BufferedWriter(new FileWriter(file, true));
+			bw = new BufferedWriter(new FileWriter(file, isAppending));
 			return bw;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,46 +48,39 @@ public class TextFileHandler {
 		}
 	}
 
-	private File createAuxFileAtPath() {
-		String[] splitPath = path.split("/");
-		splitPath[splitPath.length - 1] = "aux";
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < splitPath.length; i++) {
-			sb.append(splitPath[i]);
-			if (i != splitPath.length - 1) {
-				sb.append("/");
+	/**
+	 * Writes text at specified index, resets last location of nextLine function
+	 * 
+	 * @param newText the new text to be inserted at specified index
+	 * @param index begins at 0
+	 */
+	public void write(String newText, int index) {
+		List<String> updatedText = new ArrayList<String>();
+		reader = fileReaderFactory(path);
+		String oldText = nextLine();
+		int count = 0;
+		while (oldText != null) {
+			if (count == index) {
+				oldText = newText;
 			}
+			updatedText.add(oldText);
+			oldText = nextLine();
+			count++;
 		}
-		String auxPath = sb.toString();
-		File aux = new File(auxPath);
 		try {
-			if (!aux.createNewFile()) {
-				throw new RuntimeException("Cannot create file aux [" + auxPath + "] !");
-			} else {
-//				System.out.println("File created succesfully!");
-				return aux;
+			BufferedWriter writer = fileWriterFactory(path);
+			for (String line : updatedText) {
+				writer.write(line + "\n");
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
-
-	public void write(String text, int index) {
-		File auxFile = createAuxFileAtPath();
-		BufferedWriter auxWriter = fileWriterFactory(auxFile);
-		
-		
-		try {
-			auxWriter.close();
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		auxFile.delete();
+		reader = fileReaderFactory(path);
 	}
 
-	public void write(String text) {
-		BufferedWriter writer = fileWriterFactory(path);
+	public void append(String text) {
+		BufferedWriter writer = fileWriterFactory(path, true);
 		try {
 			writer.append(text);
 			writer.close();
@@ -103,7 +91,7 @@ public class TextFileHandler {
 	}
 
 	/**
-	 * Reads the next line of file, resets if
+	 * Reads the next line of file
 	 * 
 	 * @return The next line from file, returns null at the end of the file
 	 */
@@ -113,11 +101,11 @@ public class TextFileHandler {
 			if ((line = reader.readLine()) != null) {
 				return line;
 			}
+			return null;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return null;
 		}
-		return null;
 	}
 
 	/**

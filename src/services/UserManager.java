@@ -10,6 +10,17 @@ public class UserManager {
 		this.userDatabase = new TextFileHandler("./data/users");
 	}
 
+	public boolean addUser(String user, String pass) {
+		if (user.isBlank() || pass.isBlank()) {
+			return false;
+		}
+		if (loginExists(user)) {
+			return false;
+		}
+		userDatabase.append(user + "," + pass + "\n");
+		return true;
+	}
+
 	public boolean verifyUser(String login, String password) {
 		String nextUser = userDatabase.nextLine();
 
@@ -24,8 +35,7 @@ public class UserManager {
 	}
 
 	public boolean loginExists(String login) {
-		String nextUser = userDatabase.nextLine();
-
+		String nextUser = userDatabase.readLine(0);
 		while (nextUser != null) {
 			String[] fields = nextUser.split(",");
 			if (login.equals(fields[0])) {
