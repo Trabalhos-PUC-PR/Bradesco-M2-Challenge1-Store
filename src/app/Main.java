@@ -44,16 +44,18 @@ public class Main {
 			adminPerm = true;
 		while (true) {
 			System.out.printf("Olá %s! O que você gostaria de fazer hoje?\n", username);
-			System.out.printf("a) Fazer compras\n");
+			System.out.printf("a) Vamos as compras!\n");
 			System.out.printf("b) Trocar usuário\n");
 			System.out.printf("c) Informações do sistema\n");
 			if (adminPerm)
 				System.out.printf("d)(ADM) Relatório de clientes\n");
 			System.out.printf("x) Sair\n");
+			System.out.printf("Opção: ");
 			String selection = sc.nextLine();
 			switch (selection) {
 			case "a":
-				System.out.println("To be implemented yet!");
+				StoreSession m = new StoreSession(username);
+				m.menuLoop();
 				break;
 			case "b":
 				main(null);
@@ -67,11 +69,12 @@ public class Main {
 				break;
 			case "x":
 				System.out.println("Volte sempre!");
+				sc.close();
 				return;
 			}
 		}
 	}
-	
+
 	public static void printDetails() {
 		System.out.println("\nShop System\n v0.4!");
 		System.out.println("Made by: André Kovalski\n");
