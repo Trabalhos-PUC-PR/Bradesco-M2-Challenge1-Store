@@ -1,8 +1,13 @@
 package app;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 import entities.Product;
 import utils.TextFileHandler;
 
@@ -12,8 +17,10 @@ public class StoreSession {
 	private List<Product> catalogue;
 	private List<Product> shoppingCart;
 	private TextFileHandler productDatabase;
+	private Scanner sc;
 
 	public StoreSession(String username) {
+		sc = new Scanner(System.in);
 		this.username = username;
 		shoppingCart = new ArrayList<Product>();
 		catalogue = new ArrayList<Product>();
@@ -31,7 +38,6 @@ public class StoreSession {
 	}
 
 	public void menuLoop() {
-		Scanner sc = new Scanner(System.in);
 		Product selectedProduct = null;
 		while (true) {
 			System.out.printf("\t - AZAMON -\n");
@@ -63,26 +69,27 @@ public class StoreSession {
 				listar();
 				break;
 			case ("c"):
-				try {
-					if (selectedProduct != null) {
-						System.out.printf("Digite a quantidade desejada (max:%d): ", selectedProduct.getQuantity());
-						int quantity = Integer.parseInt(sc.nextLine());
-						adicionarAoCarrinho(selectedProduct, quantity);
-						selectedProduct = null;
-					} else {
-						System.out.println("Selecione um produto na busca de produtos!");
-					}
-				} catch (NumberFormatException e) {
-					System.out.println("Digite um número valido");
-				}
+				adicionarAoCarrinho(selectedProduct);
+				selectedProduct = null;
 				break;
 			case ("d"):
 				listarCarrinho();
-				System.out.println("Finalizar a compra? (y/n): ");
-				String isPaying = sc.nextLine();
-				if(isPaying.equals("y")) {
-					generateClientLog();
-					shoppingCart = new ArrayList<Product>();
+				if (shoppingCart.size() != 0) {
+					System.out.println("Finalizar a compra? (y/n): ");
+					String isPaying = sc.nextLine();
+					if (isPaying.equals("y")) {
+						generateClientLog();
+						try {
+							BufferedWriter bw = new BufferedWriter(new FileWriter(new File("./data/products")));
+							for(Product p : catalogue) {
+								bw.write(p.toStringDatabase()+"\n");
+							}
+							bw.close();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						shoppingCart = new ArrayList<Product>();
+					}
 				}
 				break;
 			case ("x"):
@@ -91,6 +98,27 @@ public class StoreSession {
 		}
 	}
 
+	private void adicionarAoCarrinho(Product selectedProduct) {
+		try {
+			if (selectedProduct != null) {
+				System.out.printf("Digite a quantidade desejada (max:%d): ", selectedProduct.getQuantity());
+				int selectedQuantity = Integer.parseInt(sc.nextLine());
+				if (selectedQuantity > 0 && selectedQuantity <= selectedProduct.getQuantity()) {
+					Product aux = new Product(selectedProduct);
+					aux.setQuantity(selectedQuantity);
+					selectedProduct.setQuantity(selectedProduct.getQuantity()-selectedQuantity);
+					shoppingCart.add(aux);
+				} else {
+					System.out.println("Digite um número menor ou igual ao do estoque");
+				}
+			} else {
+				System.out.println("Selecione um produto na busca de produtos!");
+			}
+		} catch (NumberFormatException e) {
+			System.out.println("Digite um número valido");
+		}
+	}
+	
 	private double cartValue() {
 		double totalValue = 0;
 		for (Product p : shoppingCart) {
@@ -98,15 +126,15 @@ public class StoreSession {
 		}
 		return totalValue;
 	}
-	
+
 	private void listarCarrinho() {
 		System.out.printf("Carrinho de compras (%d): \n", shoppingCart.size());
 		double totalValue = 0;
 		for (Product p : shoppingCart) {
-			System.out.printf("%-25s + %.2f\n", p.getName(), p.totalValue());
+			System.out.printf("%-25s + %.2f\n", (p.getName() + "(" + p.getQuantity() + ")"), p.totalValue());
 			totalValue += p.totalValue();
 		}
-		System.out.printf("%25s - %.2f\n", "TOTAL PRICE", totalValue);
+		System.out.printf("%-25s - %.2f\n", "TOTAL PRICE", totalValue);
 	}
 
 	public Product buscar(String name) {
@@ -132,23 +160,11 @@ public class StoreSession {
 			System.out.printf("%02d : %s\n", cont, p);
 			cont++;
 		}
-	}
-
-	private void adicionarAoCarrinho(Product product, int quantity) {
-		if (quantity > 0 && quantity <= product.getQuantity()) {
-			product.setQuantity(quantity);
-			shoppingCart.add(product);
-		} else {
-			System.out.println("Digite um número menor ou igual ao do estoque");
-		}
-	}
+	} 
 
 	private void generateClientLog() {
 		TextFileHandler logs = new TextFileHandler("./data/clientLog");
-		logs.append(username+cartValue()+"\n");
+		logs.append(String.format("%s-%.2f\n", username, cartValue()));
 	}
 	
-//	Adicionar o produto ao carrinho: Adiciona o produto ao carrinho. O cliente deve ser questionado sobre quantas unidades devem ser adicionadas. Ele não poderá adicionar mais produtos do que há no estoque.
-//	Exibir carrinho: Exibe os produtos no carrinho, mostrando inclusive o total da compra. Também dá as opções de retornar as compras ou de finalizar a compra. Se a compra for finalizada, será salva no histórico do cliente.
-//	Voltar ao menu principal
 }

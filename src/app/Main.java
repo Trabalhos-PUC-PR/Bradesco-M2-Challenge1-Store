@@ -2,11 +2,14 @@ package app;
 
 import java.util.Scanner;
 import services.UserManager;
+import utils.TextFileHandler;
 
 public class Main {
 
+	private static Scanner sc;
+	
 	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
+		sc = new Scanner(System.in);
 
 		System.out.printf("Type your login: ");
 		String login = sc.nextLine();
@@ -38,7 +41,6 @@ public class Main {
 	}
 
 	public static void menu(String username) {
-		Scanner sc = new Scanner(System.in);
 		boolean adminPerm = false;
 		if (username.equals("admin"))
 			adminPerm = true;
@@ -64,8 +66,16 @@ public class Main {
 				printDetails();
 				break;
 			case "d":
-				if (adminPerm)
-					System.out.println("To be implemented yet!");
+				if (adminPerm) {
+					System.out.println("Log de clientes:");
+					TextFileHandler tfh = new TextFileHandler("./data/clientLog");
+					String logLine = tfh.nextLine();
+					while(logLine != null) {
+						System.out.println(logLine);
+						logLine = tfh.nextLine();
+					}
+					System.out.println("= ==+== =");
+				}
 				break;
 			case "x":
 				System.out.println("Volte sempre!");

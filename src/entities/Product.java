@@ -6,6 +6,12 @@ public class Product {
 	private double price;
 	private int quantity;
 
+	public Product(Product p) {
+		this.name = p.getName();
+		this.price = p.getPrice();
+		this.quantity = p.getQuantity();
+	}
+	
 	public Product(String name, double value, int quantity) {
 		this.name = name;
 		this.price = value;
@@ -34,6 +40,10 @@ public class Product {
 	
 	public double totalValue() {
 		return quantity * price;
+	}
+	
+	public String toStringDatabase() {
+		return String.format("%d,%s,%.2f", quantity, name, price);
 	}
 	
 	@Override
