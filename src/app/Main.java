@@ -1,13 +1,16 @@
 package app;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Scanner;
 import services.UserManager;
-import utils.TextFileHandler;
 
 public class Main {
 
 	private static Scanner sc;
-	
+
 	public static void main(String[] args) {
 		sc = new Scanner(System.in);
 
@@ -20,6 +23,7 @@ public class Main {
 		boolean isValidated = userMan.verifyUser(login, password);
 
 		if (isValidated) {
+			login = userMan.getLoginFromDatabase(login);
 			System.out.println("Welcome!");
 			menu(login);
 		} else {
@@ -54,6 +58,7 @@ public class Main {
 			System.out.printf("x) Sair\n");
 			System.out.printf("Opção: ");
 			String selection = sc.nextLine();
+
 			switch (selection) {
 			case "a":
 				StoreSession m = new StoreSession(username);
@@ -67,14 +72,7 @@ public class Main {
 				break;
 			case "d":
 				if (adminPerm) {
-					System.out.println("Log de clientes:");
-					TextFileHandler tfh = new TextFileHandler("./data/clientLog");
-					String logLine = tfh.nextLine();
-					while(logLine != null) {
-						System.out.println(logLine);
-						logLine = tfh.nextLine();
-					}
-					System.out.println("= ==+== =");
+					printClientLog();
 				}
 				break;
 			case "x":
@@ -85,8 +83,26 @@ public class Main {
 		}
 	}
 
+	public static void printClientLog() {
+		try {
+			System.out.println("Log de clientes:");
+			File file = new File(StoreSession.getClientLogPath());
+			file.createNewFile();
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			String logLine = br.readLine();
+			while (logLine != null) {
+				System.out.println(logLine);
+				logLine = br.readLine();
+			}
+			br.close();
+			System.out.println("= ==+== =");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	public static void printDetails() {
-		System.out.println("\nShop System\n v0.4!");
+		System.out.println("\nShop System\n v1.0!");
 		System.out.println("Made by: André Kovalski\n");
 	}
 

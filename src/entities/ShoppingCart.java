@@ -14,8 +14,6 @@ public class ShoppingCart {
 	public void add(Product selectedProduct, int selectedQuantity) {
 		try {
 			if (selectedProduct != null) {
-//				System.out.printf("Digite a quantidade desejada (max:%d): ", selectedProduct.getQuantity());
-//				int selectedQuantity = Integer.parseInt(sc.nextLine());
 				if (selectedQuantity > 0 && selectedQuantity <= selectedProduct.getQuantity()) {
 					Product aux = new Product(selectedProduct);
 					aux.setQuantity(selectedQuantity);
