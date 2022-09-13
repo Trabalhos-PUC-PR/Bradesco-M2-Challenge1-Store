@@ -30,7 +30,10 @@ public class StoreSession {
 	}
 
 	public void menuLoop() {
+		boolean adminPerm = false;
 		Product selectedProduct = null;
+		if (username.equals("admin"))
+			adminPerm = true;
 		while (true) {
 			System.out.println();
 			System.out.printf("\t - AZAMON -\n");
@@ -40,6 +43,8 @@ public class StoreSession {
 			System.out.printf("d) List cart\n");
 			System.out.printf("e) Checkout!\n");
 			System.out.printf("f) Clear cart\n");
+			if(adminPerm)
+				System.out.printf("g)(ADM) Add products to catalogue\n");
 			System.out.printf("x) Go to main menu\n");
 			if (selectedProduct != null) {
 				System.out.printf("\nSelected product: %s\n\n", selectedProduct);
@@ -73,6 +78,17 @@ public class StoreSession {
 				catalogue.refresh();
 				selectedProduct = null;
 				break;
+			case ("g"):
+				if(adminPerm) {
+					System.out.println("Type the new product name: ");
+					String name = sc.nextLine();
+					System.out.println("Type the new product price: ");
+					double price = Double.parseDouble(sc.nextLine());
+					System.out.println("Type the new product quantity: ");
+					int quantity = Integer.parseInt(sc.nextLine());
+					catalogue.add(new Product(name, price, quantity));
+					catalogue.update();
+				}
 			case ("x"):
 				return;
 			}

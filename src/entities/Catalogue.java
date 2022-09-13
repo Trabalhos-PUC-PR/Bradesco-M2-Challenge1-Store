@@ -76,6 +76,10 @@ public class Catalogue {
 		}
 	}
 
+	public void add(Product p) {
+		catalogue.add(p);
+	}
+	
 	public void update() {
 		BufferedWriter bw;
 		try {
