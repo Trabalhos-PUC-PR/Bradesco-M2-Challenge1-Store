@@ -24,6 +24,7 @@ public class Main {
 
 		if (isValidated) {
 			login = userMan.getLoginFromDatabase(login);
+			System.out.println();
 			System.out.println("Welcome!");
 			menu(login);
 		} else {
@@ -49,16 +50,18 @@ public class Main {
 		if (username.equals("admin"))
 			adminPerm = true;
 		while (true) {
-			System.out.printf("Olá %s! O que você gostaria de fazer hoje?\n", username);
-			System.out.printf("a) Vamos as compras!\n");
-			System.out.printf("b) Trocar usuário\n");
-			System.out.printf("c) Informações do sistema\n");
+			System.out.println();
+			System.out.printf("Hello %s! What would you like to do today?\n", username);
+			System.out.printf("a) Let's go shopping!\n");
+			System.out.printf("b) Switch username\n");
+			System.out.printf("c) System information\n");
 			if (adminPerm)
-				System.out.printf("d)(ADM) Relatório de clientes\n");
-			System.out.printf("x) Sair\n");
-			System.out.printf("Opção: ");
+				System.out.printf("d)(ADM) Print client logs\n");
+			System.out.printf("x) Exit\n");
+			System.out.printf("Option: ");
 			String selection = sc.nextLine();
 
+			System.out.println();
 			switch (selection) {
 			case "a":
 				StoreSession m = new StoreSession(username);
@@ -76,7 +79,7 @@ public class Main {
 				}
 				break;
 			case "x":
-				System.out.println("Volte sempre!");
+				System.out.println("Come back again!");
 				sc.close();
 				return;
 			}
@@ -85,7 +88,7 @@ public class Main {
 
 	public static void printClientLog() {
 		try {
-			System.out.println("Log de clientes:");
+			System.out.println("Client logs:");
 			File file = new File(StoreSession.getClientLogPath());
 			file.createNewFile();
 			BufferedReader br = new BufferedReader(new FileReader(file));

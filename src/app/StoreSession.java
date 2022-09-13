@@ -28,27 +28,28 @@ public class StoreSession {
 	public static String getClientLogPath() {
 		return "./data/clientLog";
 	}
-	
+
 	public void menuLoop() {
 		Product selectedProduct = null;
 		while (true) {
 			System.out.println();
 			System.out.printf("\t - AZAMON -\n");
-			System.out.printf("a) Buscar produtos\n");
-			System.out.printf("b) Listar produtos\n");
-			System.out.printf("c) Adicionar ao carrinho\n");
-			System.out.printf("d) Exibir carrinho\n");
-			System.out.printf("e) Limpar carrinho\n");
-			System.out.printf("x) Voltar ao menu principal\n");
+			System.out.printf("a) Search and select products\n");
+			System.out.printf("b) List products\n");
+			System.out.printf("c) Add to cart\n");
+			System.out.printf("d) List cart\n");
+			System.out.printf("e) Checkout!\n");
+			System.out.printf("f) Clear cart\n");
+			System.out.printf("x) Go to main menu\n");
 			if (selectedProduct != null) {
-				System.out.printf("\nProduto selecionado: %s\n\n", selectedProduct);
+				System.out.printf("\nSelected product: %s\n\n", selectedProduct);
 			}
-			System.out.printf("Opção: ");
+			System.out.printf("Option: ");
 			String selection = sc.nextLine();
 			System.out.println();
 			switch (selection) {
 			case ("a"):
-				System.out.println("Digite o nome, ou index do produto desejado!");
+				System.out.println("Type the name or index of selected product!");
 				String query = sc.nextLine();
 				selectedProduct = lookOnCatalogue(query);
 				break;
@@ -61,10 +62,13 @@ public class StoreSession {
 				break;
 			case ("d"):
 				cart.list();
+				break;
+			case ("e"):
+				cart.list();
 				if (cart.size() > 0)
 					payment();
 				break;
-			case ("e"):
+			case ("f"):
 				cart.clear();
 				catalogue.refresh();
 				selectedProduct = null;
@@ -87,23 +91,23 @@ public class StoreSession {
 	private void addToCart(Product product) {
 		if (product != null) {
 			try {
-				System.out.printf("Digite a quantidade desejada (max:%d): ", product.getQuantity());
+				System.out.printf("Type the quantity (max:%d): ", product.getQuantity());
 				int quantity = Integer.parseInt(sc.nextLine());
 				if (quantity > 0 && quantity <= product.getQuantity()) {
 					cart.add(product, quantity);
 				} else {
-					System.out.println("Digite um número menor ou igual ao do estoque");
+					System.out.println("Type a number less or equal than the stock");
 				}
 			} catch (NumberFormatException e) {
-				System.out.println("Digite um número valido");
+				System.out.println("Type a valid number");
 			}
 		} else {
-			System.out.println("Selecione um produto na busca de produtos!");
+			System.out.println("Select a product from the product listing!");
 		}
 	}
 
 	private void payment() {
-		System.out.println("Finalizar a compra? (y/n): ");
+		System.out.println("Checkout? (y/n): ");
 		String isPaying = sc.nextLine();
 		if (isPaying.equals("y")) {
 			generateClientLog();
