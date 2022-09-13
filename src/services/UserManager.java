@@ -23,10 +23,12 @@ public class UserManager {
 
 	public boolean verifyUser(String login, String password) {
 		String nextUser = userDatabase.nextLine();
+		login = login.toLowerCase();
+		password = password.toLowerCase();
 
 		while (nextUser != null) {
 			String[] fields = nextUser.split(",");
-			if (login.equals(fields[0]) && password.equals(fields[1])) {
+			if (login.equals(fields[0].toLowerCase()) && password.equals(fields[1].toLowerCase())) {
 				return true;
 			}
 			nextUser = userDatabase.nextLine();
@@ -38,7 +40,7 @@ public class UserManager {
 		String nextUser = userDatabase.readLine(0);
 		while (nextUser != null) {
 			String[] fields = nextUser.split(",");
-			if (login.equals(fields[0])) {
+			if (login.toLowerCase().equals(fields[0].toLowerCase())) {
 				return true;
 			}
 			nextUser = userDatabase.nextLine();

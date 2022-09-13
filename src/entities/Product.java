@@ -50,19 +50,5 @@ public class Product {
 	public String toString() {
 		return String.format("%s (%d) - R$:%.2f", name, quantity, price);
 	}
-
-	public String getSerial() {
-		return String.format("%s - R$%.2f", name, price);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		return other.getSerial().equals(getSerial());
-	}
-
-	
 	
 }
