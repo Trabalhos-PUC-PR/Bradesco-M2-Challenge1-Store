@@ -8,6 +8,7 @@ import java.util.Scanner;
 import entities.Catalogue;
 import entities.Product;
 import entities.ShoppingCart;
+import services.StockManager;
 
 public class StoreSession {
 
@@ -44,14 +45,17 @@ public class StoreSession {
 			System.out.printf("e) Checkout!\n");
 			System.out.printf("f) Clear cart\n");
 			if(adminPerm)
-				System.out.printf("g)(ADM) Add products to catalogue\n");
+				System.out.printf("g)(ADM) Stock manager (will clear cart)\n");
 			System.out.printf("x) Go to main menu\n");
+			
 			if (selectedProduct != null) {
 				System.out.printf("\nSelected product: %s\n\n", selectedProduct);
 			}
+			
 			System.out.printf("Option: ");
 			String selection = sc.nextLine();
 			System.out.println();
+			
 			switch (selection) {
 			case ("a"):
 				System.out.println("Type the name or index of selected product!");
@@ -80,14 +84,9 @@ public class StoreSession {
 				break;
 			case ("g"):
 				if(adminPerm) {
-					System.out.println("Type the new product name: ");
-					String name = sc.nextLine();
-					System.out.println("Type the new product price: ");
-					double price = Double.parseDouble(sc.nextLine());
-					System.out.println("Type the new product quantity: ");
-					int quantity = Integer.parseInt(sc.nextLine());
-					catalogue.add(new Product(name, price, quantity));
-					catalogue.update();
+					StockManager sm = new StockManager(catalogue);
+					sm.menuLoop();
+					cart.clear();
 				}
 			case ("x"):
 				return;

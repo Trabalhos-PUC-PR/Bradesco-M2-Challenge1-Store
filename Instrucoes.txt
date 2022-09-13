@@ -52,9 +52,4 @@ Requisitos opcionais
 
 Caso sobre tempo, tente realizar um ou mais desses requisitos:
 
-    Valide o CPF digitado
-    Ordene o relatório de clientes do que mais comprou para o que menos comprou. A ordenação pode ser feita pela média ou pelo valor total da compra.
     Adicione um módulo para gerenciar os produtos do estoque
-    Carregue uma listagem de produtos pré-cadastrada de um arquivo de textos
-    Salve os dados em arquivos de texto, de modo que o sistema não perca nada quando for fechado
-    Você trabalhou utilizando o github (fez commits com mensagens, criou uma versão do repositório na data de entrega e enviou a url do repositório no canvas).

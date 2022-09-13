@@ -80,6 +80,10 @@ public class Catalogue {
 		catalogue.add(p);
 	}
 	
+	public void remove(int index) {
+		catalogue.remove(index);
+	}
+	
 	public void update() {
 		BufferedWriter bw;
 		try {
@@ -91,6 +95,10 @@ public class Catalogue {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int size() {
+		return catalogue.size();
 	}
 	
 }
