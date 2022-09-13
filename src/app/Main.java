@@ -4,7 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
+
+import entities.Client;
 import services.UserManager;
 
 public class Main {
@@ -12,6 +17,7 @@ public class Main {
 	private static Scanner sc;
 
 	public static void main(String[] args) {
+		new File("./data").mkdir();
 		sc = new Scanner(System.in);
 
 		System.out.printf("Type your login: ");
@@ -56,7 +62,7 @@ public class Main {
 			System.out.printf("b) Switch username\n");
 			System.out.printf("c) System information\n");
 			if (adminPerm)
-				System.out.printf("d)(ADM) Print client logs\n");
+				System.out.printf("d)(ADM) Print client logs sorted by most expensive purchase\n");
 			System.out.printf("x) Exit\n");
 			System.out.printf("Option: ");
 			String selection = sc.nextLine();
@@ -75,7 +81,7 @@ public class Main {
 				break;
 			case "d":
 				if (adminPerm) {
-					printClientLog();
+					printSortedClientLog();
 				}
 				break;
 			case "x":
@@ -86,18 +92,23 @@ public class Main {
 		}
 	}
 
-	public static void printClientLog() {
+	public static void printSortedClientLog() {
 		try {
-			System.out.println("Client logs:");
+			System.out.println("Sorted Client logs:");
 			File file = new File(StoreSession.getClientLogPath());
 			file.createNewFile();
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String logLine = br.readLine();
+			List<Client> clients = new ArrayList<Client>();
 			while (logLine != null) {
-				System.out.println(logLine);
+				clients.add(new Client(logLine));
 				logLine = br.readLine();
 			}
 			br.close();
+			Collections.sort(clients);
+			for(Client c : clients) {
+				System.out.println(c);
+			}
 			System.out.println("= ==+== =");
 		} catch (IOException e) {
 			e.printStackTrace();
