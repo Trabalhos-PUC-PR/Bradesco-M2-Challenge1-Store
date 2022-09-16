@@ -44,18 +44,18 @@ public class StoreSession {
 			System.out.printf("d) List cart\n");
 			System.out.printf("e) Checkout!\n");
 			System.out.printf("f) Clear cart\n");
-			if(adminPerm)
+			if (adminPerm)
 				System.out.printf("g)(ADM) Stock manager (will clear cart)\n");
 			System.out.printf("x) Go to main menu\n");
-			
+
 			if (selectedProduct != null) {
 				System.out.printf("\nSelected product: %s\n\n", selectedProduct);
 			}
-			
+
 			System.out.printf("Option: ");
 			String selection = sc.nextLine();
 			System.out.println();
-			
+
 			switch (selection) {
 			case ("a"):
 				System.out.println("Type the name or index of selected product!");
@@ -83,11 +83,12 @@ public class StoreSession {
 				selectedProduct = null;
 				break;
 			case ("g"):
-				if(adminPerm) {
-					StockManager sm = new StockManager(catalogue);
-					sm.menuLoop();
+				if (adminPerm) {
+					StockManager stockMan = new StockManager(catalogue);
+					stockMan.menuLoop();
 					cart.clear();
 				}
+				break;
 			case ("x"):
 				return;
 			}

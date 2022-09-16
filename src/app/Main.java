@@ -70,8 +70,8 @@ public class Main {
 			System.out.println();
 			switch (selection) {
 			case "a":
-				StoreSession m = new StoreSession(username);
-				m.menuLoop();
+				StoreSession session = new StoreSession(username);
+				session.menuLoop();
 				break;
 			case "b":
 				main(null);
