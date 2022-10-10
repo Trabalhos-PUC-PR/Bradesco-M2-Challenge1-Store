@@ -43,7 +43,7 @@ public class StockManager {
 				catalogue.update();
 				break;
 			case ("b"):
-				catalogue.list();
+				catalogue.list(-1);
 				break;
 			case ("c"):
 				index = askIndex();
@@ -87,7 +87,7 @@ public class StockManager {
 	}
 
 	public int askIndex() {
-		catalogue.list();
+		catalogue.list(-1);
 		System.out.println("Select the index: ");
 		return Integer.parseInt(sc.nextLine());
 	}

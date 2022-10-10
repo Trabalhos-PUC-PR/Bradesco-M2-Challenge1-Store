@@ -60,12 +60,22 @@ public class StoreSession {
 
 			switch (selection) {
 			case ("a"):
-				System.out.println("Type the name or index of selected product!");
+				System.out.println("Type the name of selected product!");
 				String query = sc.nextLine();
 				selectedProduct = lookOnCatalogue(query);
 				break;
 			case ("b"):
-				catalogue.list();
+				int pageNumber = -1;
+				while (pageNumber < 0) {
+					System.out.print("Select the page: ");
+					String page = sc.nextLine();
+					try {
+						pageNumber = Integer.parseInt(page);
+					} catch (RuntimeException e) {
+
+					}
+				}
+				catalogue.list(pageNumber);
 				break;
 			case ("c"):
 				addToCart(selectedProduct);

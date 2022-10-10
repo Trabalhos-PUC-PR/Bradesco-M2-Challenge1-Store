@@ -8,13 +8,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Catalogue {
 
 	private List<Product> catalogue;
 	private BufferedReader br;
 	private String cataloguePath;
-	
+
 	public Catalogue() {
 		this.catalogue = new ArrayList<Product>();
 		this.cataloguePath = "./data/catalogue";
@@ -32,7 +33,7 @@ public class Catalogue {
 		}
 		return null;
 	}
-	
+
 	public void refresh() {
 		try {
 			this.catalogue = new ArrayList<Product>();
@@ -68,22 +69,37 @@ public class Catalogue {
 		return catalogue.get(index);
 	}
 
-	public void list() {
-		int cont = 1;
-		for (Product p : catalogue) {
-			System.out.printf("%02d : %s\n", cont, p);
-			cont++;
+	public void list(int pagination) {
+		if (pagination != -1) {
+			int size = 5;
+			int skip = size * (pagination - 1);
+			int limit = size * pagination;
+			int cont = skip + 1;
+
+			List<Product> aux = catalogue.stream().sorted((p1, p2) -> p1.getName().compareTo(p2.getName())).skip(skip)
+					.limit(limit).collect(Collectors.toList());
+
+			for (Product p : aux) {
+				System.out.printf("%02d : %s\n", cont, p);
+				cont++;
+			}
+		} else {
+			int cont = 1;
+			for (Product p : catalogue) {
+				System.out.printf("%02d : %s\n", cont, p);
+				cont++;
+			}
 		}
 	}
 
 	public void add(Product p) {
 		catalogue.add(p);
 	}
-	
+
 	public void remove(int index) {
 		catalogue.remove(index);
 	}
-	
+
 	public void update() {
 		BufferedWriter bw;
 		try {
@@ -96,9 +112,9 @@ public class Catalogue {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int size() {
 		return catalogue.size();
 	}
-	
+
 }

@@ -1,7 +1,6 @@
 package entities.clientSorters;
 
 import java.util.Comparator;
-
 import entities.Client;
 
 public class SorterByDate implements Comparator<Client> {
