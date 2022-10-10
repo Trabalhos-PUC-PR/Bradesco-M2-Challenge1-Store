@@ -4,22 +4,35 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Scanner;
 
 import entities.Client;
+import entities.clientSorters.SorterByDate;
+import entities.clientSorters.SorterByPrice;
 import services.UserManager;
 
 public class Main {
 
+	/* TODO:
+	 * 1 Include purchase give option to order by date
+	 * 2 CPF validation
+	 * 4 Print cleanUp
+	 * 5 Catalogue filters (with streams)
+	 */
+	
 	private static Scanner sc;
 
 	public static void main(String[] args) {
-		new File("./data").mkdir();
+		new File(getDataFolder()).mkdir();
 		sc = new Scanner(System.in);
-
+		
+		System.out.println(LocalDate.now());
+		
 		System.out.printf("Type your login: ");
 		String login = sc.nextLine();
 		System.out.printf("Type your password: ");
@@ -51,6 +64,10 @@ public class Main {
 		sc.close();
 	}
 
+	public static String getDataFolder() {
+		return "./data";
+	}
+	
 	public static void menu(String username) {
 		boolean adminPerm = false;
 		if (username.equals("admin"))
@@ -81,7 +98,16 @@ public class Main {
 				break;
 			case "d":
 				if (adminPerm) {
-					printSortedClientLog();
+					String text = "";
+					while(!text.equals("p") && !text.equals("d")) {
+						System.out.print("Order by date or by price? (d/p): ");
+						text = sc.nextLine();
+					}
+					if(text.equals("p")) {
+						printSortedClientLog(new SorterByPrice());
+					} else {
+						printSortedClientLog(new SorterByDate());
+					}
 				}
 				break;
 			case "x":
@@ -92,12 +118,11 @@ public class Main {
 		}
 	}
 
-	public static void printSortedClientLog() {
-		try {
-			System.out.println("Sorted Client logs:");
-			File file = new File(StoreSession.getClientLogPath());
+	public static void printSortedClientLog(Comparator<Client> comp) {
+		File file = new File(StoreSession.getClientLogPath());
+		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
 			file.createNewFile();
-			BufferedReader br = new BufferedReader(new FileReader(file));
+			System.out.println("Sorted Client logs:");
 			String logLine = br.readLine();
 			List<Client> clients = new ArrayList<Client>();
 			while (logLine != null) {
@@ -105,7 +130,7 @@ public class Main {
 				logLine = br.readLine();
 			}
 			br.close();
-			Collections.sort(clients);
+			Collections.sort(clients, comp);
 			for(Client c : clients) {
 				System.out.println(c);
 			}

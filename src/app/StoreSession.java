@@ -4,7 +4,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Scanner;
+
 import entities.Catalogue;
 import entities.Product;
 import entities.ShoppingCart;
@@ -137,7 +139,7 @@ public class StoreSession {
 		try {
 			File file = new File(clientLogPath);
 			BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-			bw.append(String.format("%s-%.2f\n", username, cart.getTotalPrice()));
+			bw.append(String.format("%s_%.2f_%s\n", username, cart.getTotalPrice(), LocalDate.now()));
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
